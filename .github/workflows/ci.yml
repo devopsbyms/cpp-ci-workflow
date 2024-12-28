@@ -1,0 +1,37 @@
+name: C++ CI
+on: 
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      
+      - name: Install CMake
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake build-essential gcc g++ clang
+
+      - name: Create build directory
+        run: mkdir build && cd build
+
+      - name: Configure CMake
+        working-directory: ./build
+        run: cmake ..
+
+      - name: Build with Cmake
+        working-directory: ./build
+        run: cmake --build .
+      
+      - name: Run tests
+        working-directory: ./build
+        run: ctest --verbose
+
+      - name: Test the application
+        working-directory: ./build
+        run: ./my_cpp_app
